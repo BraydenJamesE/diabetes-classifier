@@ -125,6 +125,16 @@ def class_imbalance_test():
         auc_key: [],
         num_samples_key: []
     }
+    def add_evals(rf_model: ExpertDiabetesModel, xgb_model: ExpertDiabetesModel) -> None:
+        evaluations = rf_model.get_evaluations(X_test, y_test)
+        data_output_rf.get(f1_key).append(evaluations.get("f1"))
+        data_output_rf.get(auc_key).append(evaluations.get("roc_auc"))
+        data_output_rf.get(num_samples_key).append(y_train.size)
+
+        evaluations = xgb_model.get_evaluations(X_test, y_test)
+        data_output_xgb.get(f1_key).append(evaluations.get("f1"))
+        data_output_xgb.get(auc_key).append(evaluations.get("roc_auc"))
+        data_output_xgb.get(num_samples_key).append(y_train.size)
 
     subset_ratio = 1
     X, y = get_data(EXPERT_MODEL_FEATURES, subset_ratio=subset_ratio)
@@ -140,15 +150,7 @@ def class_imbalance_test():
     apply_train_calibrate_threshold(rf_model, X_train, X_val, y_train, y_val)
     apply_train_calibrate_threshold(xgb_model, X_train, X_val, y_train, y_val)
 
-    evaluations = rf_model.get_evaluations(X_test, y_test)
-    data_output_rf.get(f1_key).append(evaluations.get("f1"))
-    data_output_rf.get(auc_key).append(evaluations.get("roc_auc"))
-    data_output_rf.get(num_samples_key).append(y_train.size)
-
-    evaluations = xgb_model.get_evaluations(X_test, y_test)
-    data_output_xgb.get(f1_key).append(evaluations.get("f1"))
-    data_output_xgb.get(auc_key).append(evaluations.get("roc_auc"))
-    data_output_xgb.get(num_samples_key).append(y_train.size)
+    add_evals(rf_model, xgb_model)
 
     # UNDERSAMPLE
     rf_model = ExpertDiabetesModel(RandomForestClassifier(**rf_params_no_class_weight, random_state=RANDOM_STATE))
@@ -158,15 +160,7 @@ def class_imbalance_test():
     apply_train_calibrate_threshold(rf_model, X_train, X_val, y_train, y_val)
     apply_train_calibrate_threshold(xgb_model, X_train, X_val, y_train, y_val)
 
-    evaluations = rf_model.get_evaluations(X_test, y_test)
-    data_output_rf.get(f1_key).append(evaluations.get("f1"))
-    data_output_rf.get(auc_key).append(evaluations.get("roc_auc"))
-    data_output_rf.get(num_samples_key).append(y_train.size)
-
-    evaluations = xgb_model.get_evaluations(X_test, y_test)
-    data_output_xgb.get(f1_key).append(evaluations.get("f1"))
-    data_output_xgb.get(auc_key).append(evaluations.get("roc_auc"))
-    data_output_xgb.get(num_samples_key).append(y_train.size)
+    add_evals(rf_model, xgb_model)
   
     # SMOTE 
     rf_model = ExpertDiabetesModel(RandomForestClassifier(**rf_params_no_class_weight, random_state=RANDOM_STATE))
@@ -176,15 +170,7 @@ def class_imbalance_test():
     apply_train_calibrate_threshold(rf_model, X_train, X_val, y_train, y_val)
     apply_train_calibrate_threshold(xgb_model, X_train, X_val, y_train, y_val)
 
-    evaluations = rf_model.get_evaluations(X_test, y_test)
-    data_output_rf.get(f1_key).append(evaluations.get("f1"))
-    data_output_rf.get(auc_key).append(evaluations.get("roc_auc"))
-    data_output_rf.get(num_samples_key).append(y_train.size)
-
-    evaluations = xgb_model.get_evaluations(X_test, y_test)
-    data_output_xgb.get(f1_key).append(evaluations.get("f1"))
-    data_output_xgb.get(auc_key).append(evaluations.get("roc_auc"))
-    data_output_xgb.get(num_samples_key).append(y_train.size)
+    add_evals(rf_model, xgb_model)
 
     # COST SENSITIVE LEARNING
     rf_params = {'class_weight': {0: 1, 1: 4}, 'max_depth': 10, 'n_estimators': 100}
@@ -197,15 +183,7 @@ def class_imbalance_test():
     apply_train_calibrate_threshold(rf_model, X_train, X_val, y_train, y_val)
     apply_train_calibrate_threshold(xgb_model, X_train, X_val, y_train, y_val)
 
-    evaluations = rf_model.get_evaluations(X_test, y_test)
-    data_output_rf.get(f1_key).append(evaluations.get("f1"))
-    data_output_rf.get(auc_key).append(evaluations.get("roc_auc"))
-    data_output_rf.get(num_samples_key).append(y_train.size)
-
-    evaluations = xgb_model.get_evaluations(X_test, y_test)
-    data_output_xgb.get(f1_key).append(evaluations.get("f1"))
-    data_output_xgb.get(auc_key).append(evaluations.get("roc_auc"))
-    data_output_xgb.get(num_samples_key).append(y_train.size)
+    add_evals(rf_model, xgb_model)
 
     # Print the results
     rf_df = pd.DataFrame(data=data_output_rf)
