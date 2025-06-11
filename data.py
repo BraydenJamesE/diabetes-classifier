@@ -1,8 +1,21 @@
+"""
+**Author:** Brayden Edwards  
+**Course:** CS 541 – Machine Learning Challenges in the Real World
+**School:** Oregon State University
+**Professor:** Dr. Kiri Wagstaff  
+**Term:** Spring 2025  
+"""
 import pandas as pd
 import numpy as np
+from sklearn.model_selection import train_test_split
 from ucimlrepo import fetch_ucirepo # Import data
 
-from config import RANDOM_STATE, TARGET_COL_NAME 
+from config import (
+    RANDOM_STATE, 
+    TARGET_COL_NAME, 
+    VAL_RATIO, 
+    TEST_RATIO
+)
 
 def get_data(features: list, subset_ratio: float = 1) -> tuple[pd.DataFrame, pd.Series]:
     # fetch dataset 
@@ -20,6 +33,22 @@ def get_data(features: list, subset_ratio: float = 1) -> tuple[pd.DataFrame, pd.
     X = df[features]
     y = df[TARGET_COL_NAME]
     return X, y
+
+def get_rand_split_data(X, y):
+    X_train_val, X_test, y_train_val, y_test = train_test_split(
+        X, y, 
+        test_size=TEST_RATIO, 
+        stratify=y, 
+        random_state=RANDOM_STATE
+    ) # Pulling out the hold-out set. 
+
+    X_train, X_val, y_train, y_val = train_test_split(
+        X_train_val, y_train_val, 
+        test_size=VAL_RATIO,
+        stratify=y_train_val, 
+        random_state=RANDOM_STATE
+    )
+    return X_train, X_val, X_test, y_train, y_val, y_test
 
 def get_class_specific_example(
     X: pd.DataFrame, 

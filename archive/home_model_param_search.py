@@ -1,7 +1,9 @@
 """
-Brayden Edwards
-AI541 - Final Project
-
+**Author:** Brayden Edwards  
+**Course:** CS 541 – Machine Learning Challenges in the Real World
+**School:** Oregon State University
+**Professor:** Dr. Kiri Wagstaff  
+**Term:** Spring 2025  
 """
 import numpy as np
 from sklearn.ensemble import RandomForestClassifier  
@@ -17,7 +19,8 @@ from data import get_data
 from config import (
     RANDOM_STATE, 
     TEST_RATIO, 
-    HOME_MODEL_FEATURES
+    HOME_MODEL_FEATURES,
+    VAL_RATIO
 ) # Global variables
 
 def main():
@@ -25,12 +28,19 @@ def main():
 
     X, y = get_data(HOME_MODEL_FEATURES, subset_ratio=subset_ratio)
 
-    X_train, _, y_train, _ = train_test_split(
+    X_train_val, X_test, y_train_val, y_test = train_test_split(
         X, y, 
         test_size=TEST_RATIO, 
         stratify=y, 
         random_state=RANDOM_STATE
-    ) # Pulling out the hold-out set. 
+    )
+
+    X_train, X_val, y_train, y_val = train_test_split(
+        X_train_val, y_train_val, 
+        test_size=VAL_RATIO,
+        stratify=y_train_val, 
+        random_state=RANDOM_STATE
+    )
 
     param_rf = {
         "n_estimators": [50, 100, 150],
