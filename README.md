@@ -1,9 +1,13 @@
 # Diabetes Risk Prediction
 
 **Author:** Brayden Edwards  
+
 **Course:** CS 541 – Machine Learning Challenges in the Real World
+
 **School:** Oregon State University
+
 **Professor:** Dr. Kiri Wagstaff  
+
 **Term:** Spring 2025  
 
 This project builds a machine learning system to predict diabetes risk using the CDC Diabetes Health Indicators dataset. The goal is to assist both healthcare professionals and at-home users in assessing risk based on self-reported health factors.
